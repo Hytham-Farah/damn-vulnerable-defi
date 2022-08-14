@@ -1,3 +1,5 @@
+My solutions to the Damn Vulnerable Defi Challenge by tinchobbate. Official README bellow:  
+
 ![](cover.png)
 
 **A set of challenges to learn offensive security of smart contracts in Ethereum.**
